@@ -1,0 +1,28 @@
+import java.io.*;
+import java.net.*;
+
+public class SimpleHttpServer {
+
+    public static void main(String[] args) {
+        int port = 8080;  // Port number for the server
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            System.out.println("Server is running on port " + port);
+
+            while (true) {
+                // Accept incoming client connections
+                try (Socket clientSocket = serverSocket.accept()) {
+                    System.out.println("Client connected: " + clientSocket.getInetAddress());
+
+                    // Get input and output streams for the socket
+                    InputStream inputStream = clientSocket.getInputStream();
+                    OutputStream outputStream = clientSocket.getOutputStream();
+
+                    // Read the HTTP request
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                    String requestLine = reader.readLine();
+                    System.out.println("Request: " + requestLine);
+
+                    // Simple HTTP response
+                    String httpResponse = "HTTP/1.1 200 OK\r\n" +
+                                          "Content-Type: text/plain\r\n" +
+                                          "Connection: close\r\n\r\n" +
